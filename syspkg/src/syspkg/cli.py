@@ -1,0 +1,74 @@
+from pathlib import Path
+
+import typer
+
+from rich.console import Console
+from rich.table import Table
+
+from .recipe import (
+    RecipeError,
+    load_metadata,
+    load_recipe,
+    validate_recipe,
+)
+
+
+app = typer.Typer(
+    help="Source package manager for SRLinux."
+)
+
+console = Console()
+
+@app.callback()
+def main() -> None:
+    """SRLinux package manager."""
+    pass
+
+@app.command("metadata")
+def metadata(
+    recipe: Path,
+) -> None:
+    """Display metadata from a package recipe."""
+
+    try:
+        module = load_recipe(recipe)
+
+        validate_recipe(module)
+
+        package = load_metadata(module)
+
+    except RecipeError as exc:
+        console.print(
+            f"[bold red]error:[/] {exc}"
+        )
+
+        raise typer.Exit(1)
+
+    table = Table(
+        title=f"{package.name} package metadata"
+    )
+
+    table.add_column("Field")
+    table.add_column("Value")
+
+    table.add_row(
+        "Name",
+        package.name,
+    )
+
+    table.add_row(
+        "Version",
+        package.version,
+    )
+
+    table.add_row(
+        "Release",
+        str(package.release),
+    )
+
+    table.add_row(
+        "Description",
+        package.description,
+    )
+
+    console.print(table)
