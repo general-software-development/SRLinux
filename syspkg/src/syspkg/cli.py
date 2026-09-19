@@ -11,7 +11,7 @@ from .recipe import (
     load_recipe,
     validate_recipe,
 )
-
+from .install import install
 
 app = typer.Typer(
     help="Source package manager for SRLinux."
@@ -72,3 +72,21 @@ def metadata(
     )
 
     console.print(table)
+
+@app.command("install")
+def cli_install(recipe: Path) -> None:
+    try:
+        module = load_recipe(recipe)
+
+        validate_recipe(module)
+
+        package = load_metadata(module)
+
+    except RecipeError as exc:
+        console.print(
+            f"[bold red]error:[/] {exc}"
+        )
+
+        raise typer.Exit(1)
+
+    install(package)    

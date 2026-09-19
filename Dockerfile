@@ -38,7 +38,7 @@ COPY --from=get-files /opt/srlinux /opt/srlinux
 COPY --from=get-files /srl/pkg/ /srl/pkg/
 COPY --from=get-files /media/srl-install /media/srl-install
 
-RUN uv pip install --no-cache-dir --prefix=/media/srl-install/srl.syspkg .
+RUN uv sync && uv pip install --no-cache-dir --prefix=/media/srl-install/srl.syspkg .
 
 ENTRYPOINT ["bash"]
 
