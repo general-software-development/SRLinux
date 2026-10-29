@@ -14,7 +14,7 @@ def metadata() -> PackageMetadata:
 def build(p: Path) -> None:
     import requests
 
-    URL = "https://github.com/general-software-development/SRLinux/blob/main/syspkg_extras/cls-1.0.0/main.c?raw=1"
+    URL = "https://raw.githubusercontent.com/general-software-development/SRLinux/main/syspkg_extras/cls-1.0.0/main.c"
 
     response = requests.get(URL, headers={"User-Agent": "Syspkg, SRLlinux (Debian) GNU/Linux"})
 
