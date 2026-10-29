@@ -38,6 +38,23 @@ def load_recipe(path: Path) -> ModuleType:
 
     return module
 
+def search_recipe(name: str, version: str | None = None) -> Path | None:
+    base_path = Path("/srl") / "packages"
+
+    for p in base_path.glob("*"):
+        meta = load_metadata(load_recipe(p))
+
+        if meta.name == name and (version == None or meta.version == version):
+            return p
+
+def parse_recipe_name(name: str) -> tuple[str, str | None]:
+    """
+    Parses a name of the form 'name:version',
+    returns (name, version)
+    """
+
+    return tuple[str, str | None](name.split(':', 1))
+
 def validate_recipe(module: ModuleType) -> None:
     required_functions = (
         "metadata",

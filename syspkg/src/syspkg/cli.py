@@ -10,6 +10,8 @@ from .recipe import (
     load_metadata,
     load_recipe,
     validate_recipe,
+    search_recipe,
+    parse_recipe_name
 )
 from .install import install
 
@@ -31,7 +33,10 @@ def metadata(
     """Display metadata from a package recipe."""
 
     try:
-        module = load_recipe(recipe)
+        recipe_path = search_recipe(*parse_recipe_name(str(recipe)))
+        if recipe_path == None:
+            raise RecipeError(f"Recipe {recipe} does not exist.")
+        module = load_recipe(recipe_path)
 
         validate_recipe(module)
 
@@ -75,18 +80,4 @@ def metadata(
 
 @app.command("install")
 def cli_install(recipe: Path) -> None:
-    try:
-        module = load_recipe(recipe)
-
-        validate_recipe(module)
-
-        package = load_metadata(module)
-
-    except RecipeError as exc:
-        console.print(
-            f"[bold red]error:[/] {exc}"
-        )
-
-        raise typer.Exit(1)
-
-    install(package)    
+    install(recipe)    
