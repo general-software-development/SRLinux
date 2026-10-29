@@ -1,7 +1,7 @@
 #include <unistd.h>
 
 int main() {
-    execve("/usr/bin/clear", (char*[]){"/usr/bin/clear", NULL}, (char*[]){ NULL });
+    execvp("clear", (char*[]){"/usr/bin/clear", NULL});
 
     return 1;
 }
