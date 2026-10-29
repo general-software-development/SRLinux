@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <unistd.h>
 
 int main() {
     execve("/usr/bin/clear", (char*[]){"/usr/bin/clear", NULL}, (char*[]){ NULL });
