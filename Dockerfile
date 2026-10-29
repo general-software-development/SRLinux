@@ -30,7 +30,20 @@ COPY syspkg/src ./src
 COPY syspkg/packages/ ./packages/
 
 
-FROM filesystem AS final
+FROM filesystem AS environment
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends zsh && \
+    rm -rf /var/lib/apt/lists/*
+
+# use --allow-remove-essential to tell apt we know what were doing :D
+RUN apt-get remove -y bash --allow-remove-essential
+
+SHELL ["/bin/zsh", "-c"]
+
+RUN ln -s /usr/bin/zsh /usr/bin/bash
+
+FROM environment AS final
 
 WORKDIR /opt/srlinux/
 
@@ -38,9 +51,9 @@ COPY --from=get-files /opt/srlinux /opt/srlinux
 COPY --from=get-files /srl/pkg/ /srl/pkg/
 COPY --from=get-files /media/srl-install /media/srl-install
 
-RUN uv pip install --no-cache-dir --prefix=/media/srl-install/srl.syspkg .
+RUN uv sync && uv pip install --no-cache-dir --prefix=/media/srl-install/srl.syspkg .
 
-ENTRYPOINT ["bash"]
+ENTRYPOINT ["zsh"]
 
 # docker build -t srlinux .
 # docker run --rm -it srlinux

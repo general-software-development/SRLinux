@@ -6,10 +6,12 @@ readme = "README.md"
 authors = [
     { name = "Bogdan", email = "github.34373732@gmail.com" }
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
+    "packaging>=26.3",
     "pydantic>=2.13.5",
     "rich>=15.0.0",
+    "stlib-ext>=0.3.0",
     "typer>=0.27.2",
 ]
 

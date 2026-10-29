@@ -10,8 +10,10 @@ from .recipe import (
     load_metadata,
     load_recipe,
     validate_recipe,
+    search_recipe,
+    parse_recipe_name
 )
-
+from .install import install
 
 app = typer.Typer(
     help="Source package manager for SRLinux."
@@ -31,7 +33,10 @@ def metadata(
     """Display metadata from a package recipe."""
 
     try:
-        module = load_recipe(recipe)
+        recipe_path = search_recipe(*parse_recipe_name(str(recipe)))
+        if recipe_path == None:
+            raise RecipeError(f"Recipe {recipe} does not exist.")
+        module = load_recipe(recipe_path)
 
         validate_recipe(module)
 
@@ -72,3 +77,7 @@ def metadata(
     )
 
     console.print(table)
+
+@app.command("install")
+def cli_install(recipe: Path) -> None:
+    install(recipe)    
