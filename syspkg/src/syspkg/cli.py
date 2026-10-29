@@ -79,5 +79,5 @@ def metadata(
     console.print(table)
 
 @app.command("install")
-def cli_install(recipe: Path) -> None:
-    install(recipe)    
+def cli_install(recipe: str) -> None:
+    install(recipe, console)    

@@ -40,7 +40,7 @@ def index_repository(base: Path) -> dict[str, list[Candidate]]:
 
 def normalise_version(version: str) -> str:
     if ":" not in version:
-        return "*"
+        return ""
 
     version = version.split(":", 1)[1]
 

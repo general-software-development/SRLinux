@@ -33,8 +33,7 @@ COPY syspkg/packages/ ./packages/
 FROM filesystem AS environment
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends zsh && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends zsh
 
 # use --allow-remove-essential to tell apt we know what were doing :D
 RUN apt-get remove -y bash --allow-remove-essential
@@ -42,6 +41,8 @@ RUN apt-get remove -y bash --allow-remove-essential
 SHELL ["/bin/zsh", "-c"]
 
 RUN ln -s /usr/bin/zsh /usr/bin/bash
+
+RUN apt install build-essential -y
 
 FROM environment AS final
 
@@ -52,6 +53,8 @@ COPY --from=get-files /srl/pkg/ /srl/pkg/
 COPY --from=get-files /media/srl-install /media/srl-install
 
 RUN uv sync && uv pip install --no-cache-dir --prefix=/media/srl-install/srl.syspkg .
+
+RUN rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT ["zsh"]
 
